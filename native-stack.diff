@@ -1,0 +1,19 @@
+--- old-native-stack.cc	2018-03-16 16:08:09.858611827 +0800
++++ native-stack.cc	2018-03-16 16:02:07.589444686 +0800
+@@ -176,6 +176,7 @@
+ void
+ add_native_net_options_description(boost::program_options::options_description &opts) {
+     opts.add(get_virtio_net_options_description());
++    opts.add(get_tcp_net_options_description());
+ #ifdef HAVE_DPDK
+     opts.add(get_dpdk_net_options_description());
+ #endif
+@@ -185,6 +186,8 @@
+     : _netif(std::move(dev))
+     , _inet(&_netif) {
+     _inet.get_udp().set_queue_size(opts["udpv4-queue-size"].as<int>());
++    //ryan add
++    _inet.get_tcp().tcp_configure(opts);
+     _dhcp = opts["host-ipv4-addr"].defaulted()
+             && opts["gw-ipv4-addr"].defaulted()
+             && opts["netmask-ipv4-addr"].defaulted() && opts["dhcp"].as<bool>();
